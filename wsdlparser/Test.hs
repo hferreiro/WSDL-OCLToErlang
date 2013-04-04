@@ -4,7 +4,5 @@ import Control.Monad
 
 main :: IO ()
 main = do
-					wsdlFile <- readFile "MathUtils.wsdl"
-					parseFileTest wsdlFile
---					print (getOperations (parseFile wsdlFile))
---					print (getClassName (parseFile wsdlFile))
+  wsdlFile <- readFile "MathUtils.wsdl"
+  putStrLn (show (wsdl2Class wsdlFile))
