@@ -5,7 +5,6 @@ import Control.Monad
 main :: IO ()
 main = do
 					wsdlFile <- readFile "MathUtils.wsdl"
-					parseFileTest2 wsdlFile
-
---          wsdlFile <- readFile "MathUtils.wsdl"
---          print $ getClassName (parseFile wsdlFile)
+					parseFileTest wsdlFile
+--					print (getOperations (parseFile wsdlFile))
+--					print (getClassName (parseFile wsdlFile))
