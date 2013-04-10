@@ -1,7 +1,7 @@
 module WSDLParser ( wsdl2Class ) where
 
-import Control.Applicative
-import Data.Maybe ( catMaybes, fromJust )
+import Control.Monad ( msum )
+import Data.Maybe ( catMaybes, fromJust, maybeToList )
 import Text.XML.Light
 
 import Debug.Trace
@@ -37,78 +37,87 @@ wsdl2Class s = Class name methods
     name = getClassName xml
     methods = getOperations xml
 
-    xml = parseXML s
+    xml = fromJust (parseXMLDoc s)
 
-getClassName :: [Content] -> String
-getClassName cs = head $ catMaybes $ map (findAttr $ defaultAttr "name") quotes
+getClassName :: Element -> String
+getClassName e = fromJust $ findAttr (defaultAttr "name") serviceT
   where
-    quotes = concatMap (findElements (serviceTag cs)) (onlyElems cs)
+    serviceT = fromJust $ filterElementName (qNameP ("wsdl","service")) e
 
-getOperations :: [Content] -> [Method]
-getOperations cs = catMaybes $ map getOperation quotes
+getOperations :: Element -> [Method]
+getOperations e = do
+  portType <- maybeToList $ childByTag ("wsdl","portType") e
+  operation <- filterElementsName (qNameP ("wsdl","operation")) portType
+  return (fromJust $ getOperation operation)
+
   where
-    quotes = concatMap (findElements (operationTag cs)) (filterPortType cs)
-
     getOperation :: Element -> Maybe Method
-    getOperation q = do name <- findAttr (defaultAttr "name") q
-                        typ <- getReturnType q
-                        params <- Just []
-                        return $ Method name typ params
+    getOperation op = do
+      name <- findAttr (defaultAttr "name") op
+      typ <- getReturnType op
+      let params = getParams op
+      return $ Method name typ params
 
     getReturnType :: Element -> Maybe String
-    getReturnType q = return (head o)
-      where
-        out = head (childrenByTag uri "output" q)
-        msg = fromJust $ attrByTag "message" out
-        --o = filterElementName isResponse (childrenByTag uri "message" cs)
-        o = filter isResponse (concatMap (filterChildrenName (qNameNameP "message")) (onlyElems cs))
+    getReturnType op = do
+      outputT <- childByTag ("wsdl","output") op
+      ('n':'s':':':msgS) <- attrByTag "message" outputT
+      msgT <- filterElement (qNameAttrValueP ("wsdl","message") ("name",msgS)) e
+      partT <- childByTag ("wsdl","part") msgT
+      ('n':'s':':':elementS) <- attrByTag "element" partT -- "ns:"
+      elementT <- elementByTagAttr ("xs","element") ("name",elementS) e
+      ('x':'s':':':typeS) <- msum $ recfindAttrBy (qNameP ("","type")) elementT -- "xs:"
+      return typeS
 
-        isResponse e = case attrByTag "name" e of
-                         Nothing -> False
-                         Just n  -> n == drop 3 msg
+    getParams :: Element -> [Param]
+    getParams op =
+      let params = fromJust $ do
+                     inputT <- childByTag ("wsdl","input") op
+                     ('n':'s':':':msgS) <- attrByTag "message" inputT
+                     msgT <- filterElement (qNameAttrValueP ("wsdl","message") ("name",msgS)) e
+                     partT <- childByTag ("wsdl","part") msgT
+                     ('n':'s':':':elementS) <- attrByTag "element" partT -- "ns:"
+                     elementT <- elementByTagAttr ("xs","element") ("name",elementS) e
+                     sequenceT <- filterElementName (qNameP ("xs","sequence")) elementT
+                     return (elChildren sequenceT)
+      in catMaybes (map getParam params)
 
-    uri = getSchema cs
+    getParam :: Element -> Maybe Param
+    getParam p = do
+      n <- findAttrBy (qNameP ("","name")) p
+      ('x':'s':':':t) <- findAttrBy (qNameP ("","type")) p
+      return (Param n t)
+
 
 t a = trace a a
 
-filterPortType :: [Content] -> [Element]
-filterPortType cs = concatMap (findChildren (portTypeTag cs)) (onlyElems cs)
+childByTag :: (String, String) -> Element -> Maybe Element
+childByTag (p,t) e
+  = filterChildName (qNameP (p,t)) e
 
-getSchema :: [Content] -> Maybe String
-getSchema cs = head $ map (findAttr $ (schemaAttr "wsdl")) quotes
-  where
-     quotes = concatMap (filterElementsName $ isSchemaQName) (onlyElems cs)
+elementByTagAttr :: (String, String) -> (String, String) -> Element -> Maybe Element
+elementByTagAttr (p,t) (a,v) e
+  = filterElement (qNameAttrValueP (p,t) (a,v)) e
 
---Tags
-childrenByTag :: Maybe String -> String -> Element -> [Element]
-childrenByTag uri t e = findChildren (tag uri t) e
+recfindAttrBy :: (QName -> Bool) -> Element -> [Maybe String]
+recfindAttrBy p e
+  = [findAttrBy p e] ++ concatMap (recfindAttrBy p) (elChildren e)
 
 attrByTag :: String -> Element -> Maybe String
 attrByTag t e = findAttr (defaultAttr t) e
 
-qNameNameP :: String -> QName -> Bool
-qNameNameP s (QName n _ _)
-  | s == n    = True
-  | otherwise = False
+qNameAttrValueP :: (String, String) -> (String, String) -> Element -> Bool
+qNameAttrValueP (p,n) (a,v) e@(Element { elName = QName n' _ (Just p') })
+  | n == n' && p == p' = findAttrBy (qNameP ("",a)) e == Just v
+  | otherwise          = False
+qNameAttrValueP _ _ e   = traceShow e False
 
-tag :: Maybe String -> String -> QName
-tag uri t = QName t uri (Just "wsdl")
-
-operationTag :: [Content] -> QName
-operationTag cs = QName "operation" (getSchema cs) (Just "wsdl")
-
-portTypeTag :: [Content] -> QName
-portTypeTag cs = QName "portType" (getSchema cs) (Just "wsdl")
-
-isSchemaQName :: QName -> Bool
-isSchemaQName (QName "definitions" _ (Just "wsdl")) = True
-isSchemaQName _ = False
-
-schemaAttr :: String -> QName
-schemaAttr sa = QName sa Nothing (Just "xmlns")
-
-serviceTag :: [Content] -> QName
-serviceTag cs = QName "service" (getSchema cs) (Just "wsdl")
+qNameP :: (String, String) -> QName -> Bool
+qNameP ("",n) (QName n' _ Nothing)
+  | n == n' = True
+qNameP (p,n)  (QName n' _ (Just p'))
+  | n == n' && p == p' = True
+qNameP _ _ = False
 
 defaultAttr :: String -> QName
 defaultAttr sa = QName sa Nothing Nothing
