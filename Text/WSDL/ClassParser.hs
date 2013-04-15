@@ -1,35 +1,10 @@
-module WSDLParser ( wsdl2Class ) where
+module Text.WSDL.ClassParser ( wsdl2Class ) where
 
 import Control.Monad ( msum )
 import Data.Maybe ( catMaybes, fromJust, maybeToList )
 import Text.XML.Light
 
-import Debug.Trace
-
-data Class = Class { cName :: String
-                   , cMethods :: [Method]
-                   }
-  deriving ( Show )
-
-data Method = Method { mName :: String
-                     , mType :: String
-                     , mParams :: [Param]
-                     --, preconditions :: [Constraint]
-                     --, postconditions :: [Constraint]
-                     --, invariants :: [Constraint]
-                     }
-  deriving ( Show )
-
-data Param = Param { pName :: String
-                   , pType :: String
-                   }
-  deriving ( Show )
-
-data Operation = Operation { oName :: String
-                           , oInput :: String
-                           , oOutput :: String
-                           }
-  deriving ( Show )
+import Data.Class
 
 wsdl2Class :: String -> Class
 wsdl2Class s = Class name methods
@@ -56,7 +31,7 @@ getOperations e = do
       name <- findAttr (defaultAttr "name") op
       typ <- getReturnType op
       let params = getParams op
-      return $ Method name typ params
+      return (Method name typ params [])
 
     getReturnType :: Element -> Maybe String
     getReturnType op = do
@@ -89,8 +64,6 @@ getOperations e = do
       return (Param n t)
 
 
-t a = trace a a
-
 childByTag :: (String, String) -> Element -> Maybe Element
 childByTag (p,t) e
   = filterChildName (qNameP (p,t)) e
@@ -110,7 +83,6 @@ qNameAttrValueP :: (String, String) -> (String, String) -> Element -> Bool
 qNameAttrValueP (p,n) (a,v) e@(Element { elName = QName n' _ (Just p') })
   | n == n' && p == p' = findAttrBy (qNameP ("",a)) e == Just v
   | otherwise          = False
-qNameAttrValueP _ _ e   = traceShow e False
 
 qNameP :: (String, String) -> QName -> Bool
 qNameP ("",n) (QName n' _ Nothing)

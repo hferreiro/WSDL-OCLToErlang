@@ -5,8 +5,8 @@
             <xs:element name="pow">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="args0" type="xs:int"/>
-                        <xs:element minOccurs="0" name="args1" type="xs:int"/>
+                        <xs:element minOccurs="0" name="a" type="xs:int"/>
+                        <xs:element minOccurs="0" name="b" type="xs:int"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -20,8 +20,8 @@
             <xs:element name="mult">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="args0" type="xs:int"/>
-                        <xs:element minOccurs="0" name="args1" type="xs:int"/>
+                        <xs:element minOccurs="0" name="a" type="xs:int"/>
+                        <xs:element minOccurs="0" name="b" type="xs:int"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -35,8 +35,8 @@
             <xs:element name="division">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="args0" type="xs:int"/>
-                        <xs:element minOccurs="0" name="args1" type="xs:int"/>
+                        <xs:element minOccurs="0" name="a" type="xs:int"/>
+                        <xs:element minOccurs="0" name="b" type="xs:int"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -50,8 +50,8 @@
             <xs:element name="add">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="args0" type="xs:int"/>
-                        <xs:element minOccurs="0" name="args1" type="xs:int"/>
+                        <xs:element minOccurs="0" name="a" type="xs:int"/>
+                        <xs:element minOccurs="0" name="b" type="xs:int"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
