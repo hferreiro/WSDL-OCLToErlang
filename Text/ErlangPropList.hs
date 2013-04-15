@@ -226,5 +226,5 @@ instance ErlangPropList Method where
 instance ErlangPropList Param where
   proplist (Param n t)
     = proplist $ ("param", [ ("name", PL (Ident n))
-                           , ("type", PL ("name", Ident t))
+                           , ("type", PL [("name", Ident t)])
                            ])
