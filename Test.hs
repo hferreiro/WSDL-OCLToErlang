@@ -41,7 +41,7 @@ runs p wc oc
     in case p ts of
         Ok  tree -> do let m = constrsByMethod tree
                            cl'= addConstrs cl m
-                       putStrLn (render (proplist [cl']))
+                       putStrLn $ render (proplist [cl']) ++ "."
 
 showTree :: (ErlangPropList a, Show a{-, Print a-}) => Verbosity -> a -> IO ()
 showTree v tree =
