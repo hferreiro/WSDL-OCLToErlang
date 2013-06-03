@@ -81,7 +81,11 @@ FP. FormalParameter ::= Ident ":" TypeSpecifier;
 TSsimple. TypeSpecifier ::= SimpleTypeSpecifier;
 TScoll. TypeSpecifier ::= CollectionType;
 
-CT. CollectionType ::= CollectionKind "(" SimpleTypeSpecifier ")";
+CT. CollectionType ::= CollectionKind "(" CollectionBody ")";
+
+CB1. CollectionBody ::= SimpleTypeSpecifier;
+CB2. CollectionBody ::= [FormalParameter];
+CB3. CollectionBody ::= CollectionType;
 
 RT. ReturnType ::= TypeSpecifier;
 
@@ -227,6 +231,7 @@ LAnd. LogicalOperator ::= "and";
 LOr. LogicalOperator ::= "or";
 LXor. LogicalOperator ::= "xor";
 
+Tuple. CollectionKind ::= "Tuple";
 Set. CollectionKind ::= "Set";
 Bag. CollectionKind ::= "Bag";
 Sequence. CollectionKind ::= "Sequence";

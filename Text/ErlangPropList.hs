@@ -4,6 +4,7 @@ module Text.ErlangPropList ( ErlangPropList(..) ) where
 import Text.PrettyPrint
 
 import Data.Class
+import Data.List ( intercalate )
 import Language.SurfaceOCL.OCL
 
 class ErlangPropList a where
@@ -33,10 +34,11 @@ instance (ErlangPropList a, ErlangPropList b) => ErlangPropList (a,b) where
 
 -- OCL
 instance ErlangPropList Ident where
-  proplist (Ident s) = doubleQuotes (text s)
+  proplist (Ident s) = doubleQuotes (proplist s)
 
 instance ErlangPropList PathName where
-  proplist (PathName [PName n]) = proplist n
+  proplist (PathName pn)
+    = proplist $ Ident (intercalate "::" (map (\(PName (Ident n)) -> n) pn))
 
 instance ErlangPropList OCLfile where
   proplist (OCLfile ps) = proplist ps
@@ -99,6 +101,9 @@ instance ErlangPropList OCLExpression where
   proplist (OCLExp e) = proplist e
 
 instance ErlangPropList Expression where
+  proplist (EOpLog e1 op e2)
+    = proplistBinOp e1 op e2
+
   proplist (EOpEq e1 op e2)
     = proplistBinOp e1 op e2
 
@@ -157,6 +162,11 @@ instance ErlangPropList Expression where
                  , ("value", PL i)
                  ]
 
+  proplist (ELit (LitStr s))
+    = proplist $ [ ("expression", Ident "StringLiteralExp")
+                 , ("value", Ident s)
+                 ]
+
   proplist (EIfExp (IfExp c t e))
     = proplist $ [ ("expression", PL (Ident "IfExp"))
                  , ("condition", PL c)
@@ -164,7 +174,12 @@ instance ErlangPropList Expression where
                  , ("else", PL e)
                  ]
 
-  proplist e = text (show e)
+  proplist ENull
+    = proplist $ [ ("expression", PL (Ident "UndefinedLiteralExp"))
+                 , ("value", PL "null")
+                 ]
+
+  proplist e = error ("Cannot parse constraint: " ++ show e)
 
 
 proplistBinOp e1 op e2
@@ -179,6 +194,11 @@ proplistBinOp e1 op e2
                                  , ("content", PL e2)
                                  ])
                ]
+
+instance ErlangPropList LogicalOperator where
+  proplist LAnd = proplist (Ident "and")
+  proplist LOr  = proplist (Ident "or")
+  proplist LXor = proplist (Ident "xor")
 
 instance ErlangPropList EqualityOperator where
   proplist EEq  = proplist (Ident "=")
@@ -206,10 +226,17 @@ instance ErlangPropList CollectionKind where
 
 -- Class
 instance ErlangPropList Class where
-  proplist (Class n m)
+  proplist (Class n a m)
     = proplist $ ("class", [ ("name", PL (Ident n))
+                           , ("attributes", PL a)
                            , ("operations", PL m)
                            ])
+
+instance ErlangPropList Attr where
+  proplist (Attr (TVar n t))
+    = proplist $ ("attribute", [ ("name", PL (Ident n))
+                               , ("type", PL [("name", t)])
+                               ])
 
 instance ErlangPropList Method where
   proplist (Method n t p [cs])
@@ -224,7 +251,26 @@ instance ErlangPropList Method where
                                ])
 
 instance ErlangPropList Param where
-  proplist (Param n t)
+  proplist (Param (TVar n t))
     = proplist $ ("param", [ ("name", PL (Ident n))
-                           , ("type", PL [("name", Ident t)])
+                           , ("type", PL [("name", t)])
                            ])
+
+instance ErlangPropList Type where
+  proplist t
+    = doubleQuotes (go t)
+    where
+      go (TSimple ns)
+        = proplist (intercalate "::" ns)
+      go (TClass c)
+        = proplist c
+      go (TTuple fps)
+        = text "Tuple" <> parens (sep (punctuate comma (map (\(TVar n t) -> proplist n <> char ':' <> go t) fps)))
+      go (TSeq t)
+        = text "Sequence" <> parens (go t)
+      go (TSet t)
+        = text "Set" <> parens (go t)
+      go (TBag t)
+        = text "Bag" <> parens (go t)
+      go (TColl t)
+        = text "Collection" <> parens (go t)
