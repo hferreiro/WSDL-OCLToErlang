@@ -39,8 +39,8 @@ Constr. Constraint ::= ContextDeclaration [ConstrBody];
 
 separator nonempty ConstrBody "";
 
-CBDefNamed. ConstrBody ::= "def" Ident ":" [LetExpression];
-CBDef. ConstrBody ::= "def" ":" [LetExpression];
+CBDefNamed. ConstrBody ::= "def" Ident ":" [DefExpression];
+CBDef. ConstrBody ::= "def" ":" [DefExpression];
 
 CBNamed. ConstrBody ::= Stereotype Ident ":" OCLExpression;
 CB. ConstrBody ::= Stereotype ":" OCLExpression;
@@ -93,6 +93,11 @@ RT. ReturnType ::= TypeSpecifier;
 --
 -- Expressions
 --
+
+DENoParam. DefExpression ::= Ident "=" Expression;
+DENoParamType. DefExpression ::= Ident ":" TypeSpecifier "=" Expression;
+DE. DefExpression ::= Ident "(" [FormalParameter] ")" "=" Expression;
+DEType. DefExpression ::= Ident "(" [FormalParameter] ")" ":" TypeSpecifier "=" Expression;
 
 OCLExp. OCLExpression ::= Expression;
 OCLExpLet. OCLExpression ::= [LetExpression] "in" Expression;
