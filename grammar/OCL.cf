@@ -39,8 +39,8 @@ Constr. Constraint ::= ContextDeclaration [ConstrBody];
 
 separator nonempty ConstrBody "";
 
-CBDefNamed. ConstrBody ::= "def" Ident ":" [DefExpression];
-CBDef. ConstrBody ::= "def" ":" [DefExpression];
+CBDefNamed. ConstrBody ::= "def" Ident ":" DefExpression;
+CBDef. ConstrBody ::= "def" ":" DefExpression;
 
 CBNamed. ConstrBody ::= Stereotype Ident ":" OCLExpression;
 CB. ConstrBody ::= Stereotype ":" OCLExpression;

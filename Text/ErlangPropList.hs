@@ -5,7 +5,7 @@ import Text.PrettyPrint
 
 import Data.Class
 import Data.List ( intercalate )
-import Language.SurfaceOCL.OCL
+import Language.OCL
 
 class ErlangPropList a where
   proplist :: a -> Doc

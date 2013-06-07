@@ -8,7 +8,7 @@ import System.Environment ( getArgs, getProgName )
 import System.FilePath ( (<.>), dropExtension )
 
 import Data.Class ( addConstrs )
-import Language.SurfaceOCL.OCL
+import Language.OCL
 import Text.ErlangPropList ( ErlangPropList(..) )
 import Text.WSDL.ClassParser ( wsdl2Class )
 

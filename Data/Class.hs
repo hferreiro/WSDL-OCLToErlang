@@ -10,7 +10,7 @@ module Data.Class
 
 import qualified Data.Map as Map
 
-import Language.SurfaceOCL.Abs
+import Language.OCL.Abs
 
 data Class = Class { cName :: String
                    , cAttrs :: [Attr]

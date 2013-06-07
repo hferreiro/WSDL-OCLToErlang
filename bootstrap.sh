@@ -1,2 +1,2 @@
 #!/bin/sh
-bnfc -d -p Language -m grammar/SurfaceOCL.cf
+bnfc -d -p Language -m grammar/OCL.cf
