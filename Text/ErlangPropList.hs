@@ -123,19 +123,6 @@ instance ErlangPropList Expression where
                                            ])
                  ]
 
-  proplist (EExplPropCall e1 PDot (PCall op _ _ (PCPs (PCPConcrete e2 _))))
-    = proplist $ [ ("expression", PL (Ident "OperationCallExp"))
-                 --, ("name", PL )
-                 , ("referredOperation", PL [ ("name", PL op)
-                                            --, ("type", PL [ ("name", PL)
-                                            --              , ("qualifiedName", PL)
-                                            --              ])
-                                            ])
-                 , ("contents", PL [ ("content", PL e1)
-                                   , ("content", PL e2)
-                                   ])
-                 ]
-
   proplist (EExplPropCall (ELitColl c) PArrow (PCall op _ _ (PCPs (PCPConcrete (EImplPropCall (PCall v _ _ _)) [PCPColon vt, PCPIterate i it e, PCPBar e2]))))
     = proplist $ [ ("expression", PL (Ident "IterateExpImpl"))
                  , ("name", PL op)
@@ -157,6 +144,22 @@ instance ErlangPropList Expression where
                  , ("body", PL e2)
                  ]
 
+  proplist (EExplPropCall e1 _ (PCall op _ _ ppcp))
+    = proplist $ [ ("expression", PL (Ident "OperationCallExp"))
+                 --, ("name", PL )
+                 , ("referredOperation", PL [ ("name", PL op)
+                                            --, ("type", PL [ ("name", PL)
+                                            --              , ("qualifiedName", PL)
+                                            --              ])
+                                            ])
+                 , ("contents", PL $ ("content", PL e1):getExpr ppcp)
+                 ]
+    where
+      getExpr NoPCP = []
+      getExpr (PCPs PCPNoDeclNoParam) = []
+      getExpr (PCPs (PCPConcrete e2 _))
+        = [("content", PL e2)]
+
   proplist (ELit (LitNum (NumInt i)))
     = proplist $ [ ("expression", PL (Ident "IntegerLiteralExp"))
                  , ("value", PL i)
@@ -165,6 +168,16 @@ instance ErlangPropList Expression where
   proplist (ELit (LitStr s))
     = proplist $ [ ("expression", Ident "StringLiteralExp")
                  , ("value", Ident s)
+                 ]
+
+  proplist (ELit LitBoolTrue)
+    = proplist $ [ ("expression", Ident "BooleanLiteralExp")
+                 , ("value", Ident "true")
+                 ]
+
+  proplist (ELit LitBoolFalse)
+    = proplist $ [ ("expression", Ident "BooleanLiteralExp")
+                 , ("value", Ident "false")
                  ]
 
   proplist (EIfExp (IfExp c t e))
