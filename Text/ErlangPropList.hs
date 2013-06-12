@@ -40,18 +40,6 @@ instance ErlangPropList PathName where
   proplist (PathName pn)
     = proplist $ Ident (intercalate "::" (map (\(PName (Ident n)) -> n) pn))
 
-instance ErlangPropList OCLfile where
-  proplist (OCLfile ps) = proplist ps
-
-instance ErlangPropList Package where
-  proplist (Pack (PackName c) cs)
-    = proplist $ ("class", [ ("name", PL c)
-                           , ("operations", PL cs)
-                           ])
-
-instance ErlangPropList OCLExpressions where
-  proplist (Constraints cs) = proplist cs
-
 instance ErlangPropList Constraint where
   proplist (Constr _ cbs)
     = proplist $ [ ("preconditions", pre)
@@ -96,9 +84,6 @@ instance ErlangPropList Stereotype where
   proplist Pre = text "preconditions"
   proplist Post = text "postconditions"
   proplist Inv = text "invariants"
-
-instance ErlangPropList OCLExpression where
-  proplist (OCLExp e) = proplist e
 
 instance ErlangPropList Expression where
   proplist (EOpLog e1 op e2)
@@ -191,6 +176,9 @@ instance ErlangPropList Expression where
     = proplist $ [ ("expression", PL (Ident "UndefinedLiteralExp"))
                  , ("value", PL "null")
                  ]
+
+  --proplist (ELet ps e)
+  --  = proplist $ [
 
   proplist e = error ("Cannot parse constraint: " ++ show e)
 

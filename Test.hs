@@ -26,9 +26,9 @@ run p wc oc xc
   = let ts = myLexer oc
         cls = wsdl2Class wc xc
     in case p ts of
-        Ok tree -> do let (OCLfile [Pack _ (Constraints cs)]) = tree
-                          cls' = addConstrs cls cs
-                      putStrLn $ render (proplist cls') ++ "."
+        Ok (OCLfile cs) -> do
+          let cls' = addConstrs cls cs
+          putStrLn $ render (proplist cls') ++ "."
         Bad s -> error ("Could not parse OCL file: " ++ s)
 
 getFiles :: FilePath -> IO (FilePath, FilePath, FilePath)

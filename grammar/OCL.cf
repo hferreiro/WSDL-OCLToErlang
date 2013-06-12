@@ -20,20 +20,23 @@ comment "/*" "*/" ; -- OCL2
 -- overall file structure
 --
 
-OCLfile. OCLfile ::= [Package];
-separator nonempty Package "";
+OCLfile. OCLfile ::= [Constraint];
+separator Constraint "";
 
-Pack. Package ::= "package" PackageName OCLExpressions "endpackage";
+--OCLfile. OCLfile ::= [Package];
+--separator nonempty Package "";
 
-PackName. PackageName ::= PathName;
+--Pack. Package ::= "package" PackageName OCLExpressions "endpackage";
+--
+--PackName. PackageName ::= PathName;
 
 
 --
 -- constraints
 --
 
-Constraints. OCLExpressions ::= [Constraint];
-separator Constraint "";
+--Constraints. OCLExpressions ::= [Constraint];
+--separator Constraint "";
 
 Constr. Constraint ::= ContextDeclaration [ConstrBody];
 
@@ -42,8 +45,8 @@ separator nonempty ConstrBody "";
 CBDefNamed. ConstrBody ::= "def" Ident ":" DefExpression;
 CBDef. ConstrBody ::= "def" ":" DefExpression;
 
-CBNamed. ConstrBody ::= Stereotype Ident ":" OCLExpression;
-CB. ConstrBody ::= Stereotype ":" OCLExpression;
+CBNamed. ConstrBody ::= Stereotype Ident ":" Expression;
+CB. ConstrBody ::= Stereotype ":" Expression;
 
 CDOper. ContextDeclaration ::= "context" OperationContext;
 CDClassif. ContextDeclaration ::= "context" ClassifierContext;
@@ -99,9 +102,6 @@ DENoParamType. DefExpression ::= Ident ":" TypeSpecifier "=" Expression;
 DE. DefExpression ::= Ident "(" [FormalParameter] ")" "=" Expression;
 DEType. DefExpression ::= Ident "(" [FormalParameter] ")" ":" TypeSpecifier "=" Expression;
 
-OCLExp. OCLExpression ::= Expression;
-OCLExpLet. OCLExpression ::= [LetExpression] "in" Expression;
-
 LENoParam. LetExpression ::= "let" Ident "=" Expression;
 LENoParamType. LetExpression ::= "let" Ident ":" TypeSpecifier "=" Expression;
 LE. LetExpression ::= "let" Ident "(" [FormalParameter] ")" "=" Expression;
@@ -111,28 +111,29 @@ separator nonempty LetExpression "";
 
 IfExp. IfExpression ::= "if" Expression "then" Expression "else" Expression "endif";
 
-EOpImpl. Expression ::= Expression "implies" Expression1;  -- make implication right-associative
-EOpLog. Expression1 ::= Expression1 LogicalOperator Expression2;
-EOpEq. Expression2 ::= Expression2 EqualityOperator Expression3;
-EOpRel. Expression3 ::= Expression3 RelationalOperator Expression4;
-EOpAdd. Expression4 ::= Expression4 AddOperator Expression5;
-EOpMul. Expression5 ::= Expression5 MultiplyOperator Expression6;
-EOpUn. Expression6 ::= UnaryOperator Expression7 ; -- this requires paren. for -(-3), not (not true), ...
+ELet. Expression ::= [LetExpression] "in" Expression1;
+EOpImpl. Expression1 ::= Expression1 "implies" Expression2;  -- make implication right-associative
+EOpLog. Expression2 ::= Expression2 LogicalOperator Expression3;
+EOpEq. Expression3 ::= Expression3 EqualityOperator Expression4;
+EOpRel. Expression4 ::= Expression4 RelationalOperator Expression5;
+EOpAdd. Expression5 ::= Expression5 AddOperator Expression6;
+EOpMul. Expression6 ::= Expression6 MultiplyOperator Expression7;
+EOpUn. Expression7 ::= UnaryOperator Expression8 ; -- this requires paren. for -(-3), not (not true), ...
 
-EExplPropCall. Expression7 ::= Expression7 PostfixOperator PropertyCall;
+EExplPropCall. Expression8 ::= Expression8 PostfixOperator PropertyCall;
 
 -- OCL2.0 messages: to start with we support only "^", not "^^"
-EMessage. Expression7 ::= Expression7 "^" PathName "(" [MessageArg] ")";
+EMessage. Expression8 ::= Expression8 "^" PathName "(" [MessageArg] ")";
 
-EImplPropCall. Expression8 ::= PropertyCall; -- remove after parsing
+EImplPropCall. Expression9 ::= PropertyCall; -- remove after parsing
 
 
-ELitColl. Expression8 ::= LiteralCollection;
-ELit. Expression8 ::= OCLLiteral;
-EIfExp. Expression8 ::= IfExpression;
-ENull. Expression8 ::= "null";  -- null value for Java/KeY:
+ELitColl. Expression9 ::= LiteralCollection;
+ELit. Expression9 ::= OCLLiteral;
+EIfExp. Expression9 ::= IfExpression;
+ENull. Expression9 ::= "null";  -- null value for Java/KeY:
 
-coercions Expression 8;
+coercions Expression 9;
 
 
 --
@@ -220,6 +221,7 @@ LCollectionEmpty. LiteralCollection ::= CollectionKind "{" "}";
 separator nonempty CollectionItem ",";
 
 CI. CollectionItem ::= Expression;
+CID. CollectionItem ::= DefExpression;
 CIRange. CollectionItem ::= Expression ".." Expression;
 
 NumInt. Number ::= Integer;
