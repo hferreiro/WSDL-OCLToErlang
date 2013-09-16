@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:description xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+	xmlns:ns1="http://org.apache.axis2/xsd" 
+	xmlns:ns="http://ws.apache.org/axis2" 
+	xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" 
+	xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" 
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+	xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" 
+	targetNamespace="http://ws.apache.org/axis2">
+
+<wsdl:types>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://ws.apache.org/axis2">
+            <xs:element name="pow">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="a" type="xs:int"/>
+                        <xs:element minOccurs="0" name="b" type="xs:positiveInteger"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="powResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="mult">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="a" type="xs:int"/>
+                        <xs:element minOccurs="0" name="b" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="multResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="division">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="a" type="xs:int"/>
+                        <xs:element minOccurs="0" name="b" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="divisionResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="add">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="a" type="xs:int"/>
+                        <xs:element minOccurs="0" name="b" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+    </wsdl:types>
+
+	<wsdl:interface name="MathUtils">
+
+	<wsdl:operation name="Add"
+            pattern="http://www.w3.org/ns/wsdl/in-out"
+            style="http://www.w3.org/ns/wsdl/style/iri"
+            wsdlx:safe="true">
+
+
+            <wsdl:input element="msg:add"/>
+            <wsdl:output element="msg:addResponse"/>
+        </wsdl:operation>
+
+	<wsdl:operation name="Mult"
+            pattern="http://www.w3.org/ns/wsdl/in-out"
+            style="http://www.w3.org/ns/wsdl/style/iri"
+            wsdlx:safe="true">
+
+
+            <wsdl:input element="msg:mult"/>
+            <wsdl:output element="msg:multResponse"/>
+        </wsdl:operation>
+        
+        <wsdl:operation name="Pow"
+            pattern="http://www.w3.org/ns/wsdl/in-out"
+            style="http://www.w3.org/ns/wsdl/style/iri"
+            wsdlx:safe="true">
+
+
+            <wsdl:input element="msg:pow"/>
+            <wsdl:output element="msg:powResponse"/>
+        </wsdl:operation>
+
+	<wsdl:operation name="Division"
+            pattern="http://www.w3.org/ns/wsdl/in-out"
+            style="http://www.w3.org/ns/wsdl/style/iri"
+            wsdlx:safe="true">
+
+
+            <wsdl:input element="msg:division"/>
+            <wsdl:output element="msg:divisionResponse"/>
+        </wsdl:operation>
+
+    </wsdl:interface>
+
+ <!--
+    Binding
+    -->
+    <wsdl:binding name="MathUtilsHTTPBinding"
+        type="http://www.w3.org/ns/wsdl/http"
+        interface="tns:MathUtils">
+
+       
+        <wsdl:operation ref="tns:Add" whttp:method="GET"
+                whttp:location="add"/>
+
+	 <wsdl:operation ref="tns:Mult" whttp:method="GET"
+                whttp:location="mult"/>
+
+	 <wsdl:operation ref="tns:Pow" whttp:method="GET"
+                whttp:location="pow"/>
+
+	 <wsdl:operation ref="tns:Division" whttp:method="GET"
+                whttp:location="division"/>
+
+
+    </wsdl:binding>
+
+    <!--
+    Service
+    -->
+    <wsdl:service name="MathUtils" interface="tns:MathUtils">
+
+        <wsdl:endpoint name="MathUtilsHTTPEndpoint"
+            binding="tns:MathUtilsHTTPBinding"
+            address="http://localhost:8080/">
+
+        </wsdl:endpoint>
+
+    </wsdl:service>
+
+</wsdl:description>
