@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<wsdl:description xmlns:wsdl="http://www.w3.org/ns/wsdl"
+        targetNamespace="http://www.interoud.com/vodkatv/wsdl"
+        xmlns:tns="http://www.interoud.com/vodkatv/wsdl"
+        xmlns:whttp="http://www.w3.org/ns/wsdl/http"
+        xmlns:wsdlx="http://www.w3.org/ns/wsdl-extensions"
+        xmlns:xs="http://www.w3.org/2001/XMLSchema"
+        xmlns:msg="http://www.interoud.com/vodkatv/xsd">
+
+    <wsdl:documentation>
+    WSDL for VoDKATV OSS/BSS API
+    </wsdl:documentation>
+
+    <!--
+    Types
+    -->
+    <wsdl:types>
+        <xs:import namespace="http://www.interoud.com/vodkatv/xsd"
+            schemaLocation="vodkatv.xsd"/>
+    </wsdl:types>
+
+    <!--
+    Interface
+    -->
+    <wsdl:interface name="VoDKATV">
+
+        <!-- Room -->
+        <wsdl:operation name="CreateRoom"
+            pattern="http://www.w3.org/ns/wsdl/in-out"
+            style="http://www.w3.org/ns/wsdl/style/iri"
+            wsdlx:safe="true">
+
+            <wsdl:documentation>
+            It creates a new household with the specified values.
+            </wsdl:documentation>
+
+            <wsdl:input element="msg:createRoomParams"/>
+            <wsdl:output element="msg:createRoomResponse"/>
+        </wsdl:operation>
+
+    </wsdl:interface>
+
+    <!--
+    Binding
+    -->
+    <wsdl:binding name="VoDKATVHTTPBinding"
+        type="http://www.w3.org/ns/wsdl/http"
+        interface="tns:VoDKATV">
+
+        <wsdl:documentation>
+        HTTP binding for the VoDKATV OSS/BSS service.
+        </wsdl:documentation>
+
+        <!-- Room -->
+        <wsdl:operation ref="tns:CreateRoom" whttp:method="POST"
+                whttp:location="external/admin/configuration/CreateRoom.do"/>
+
+    </wsdl:binding>
+
+    <!--
+    Service
+    -->
+    <wsdl:service name="VoDKATV" interface="tns:VoDKATV">
+
+        <wsdl:documentation>
+        VoDKATV OSS/BSS service.
+        </wsdl:documentation>
+
+        <wsdl:endpoint name="VoDKATVHTTPEndpoint"
+            binding="tns:VoDKATVHTTPBinding"
+            address="http://localhost:8082/vodkatv/">
+
+        </wsdl:endpoint>
+
+    </wsdl:service>
+
+</wsdl:description>
