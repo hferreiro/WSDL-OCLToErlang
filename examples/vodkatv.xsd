@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        targetNamespace="http://www.interoud.com/vodkatv/xsd"
+        xmlns:tns="http://www.interoud.com/vodkatv/xsd"
+        xmlns:wsdlx="http://www.w3.org/ns/wsdl-extensions">
+
+    <!--
+    Operations
+    -->
+
+    <!-- Room -->
+    <xsd:element name="createRoomParams">
+        <xsd:annotation>
+            <xsd:documentation>
+            Params for operation CreateRoom.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="roomId" type="xsd:string" />
+                <xsd:element name="description" type="xsd:string" minOccurs="0" maxOccurs="1" />
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="createRoomResponse">
+        <xsd:annotation>
+            <xsd:documentation>
+            Response of operation CreateRoom.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="roomId" type="xsd:string" />
+                <xsd:element name="description" type="xsd:string" minOccurs="0" maxOccurs="1" />
+                <xsd:element name="errors" type="tns:errors" minOccurs="0" maxOccurs="1" />
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <!--
+    Errors
+    -->
+    <xsd:complexType name="errors">
+        <xsd:sequence>
+            <xsd:element name="error" type="tns:error" minOccurs="1" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="error">
+        <xsd:sequence>
+            <xsd:element name="code" type="xsd:string" />
+            <xsd:element name="params" type="tns:errorParams" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="description" type="xsd:string" />
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="errorParams">
+        <xsd:sequence>
+            <xsd:element name="param" type="tns:errorParam" minOccurs="1" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="errorParam">
+        <xsd:attribute name="name" type="xsd:string" />
+        <xsd:attribute name="value" type="xsd:string" />
+    </xsd:complexType>
+
+</xsd:schema>
