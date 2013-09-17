@@ -1,5 +1,3 @@
-package MathUtils
-
 context MathUtils::add(a: Integer, b: Integer): Integer
 post: result = a + b
 
@@ -14,5 +12,3 @@ post testif: if (b <> 0) then result = a.div(b) else result = 0 endif
 context MathUtils::pow(a: Integer, b: UnlimitedNatural): Integer
 post: result = Sequence{1..b}->
     iterate(i : Integer; acc : Integer = 1 | acc*a)
-
-endpackage
