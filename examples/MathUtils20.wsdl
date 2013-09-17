@@ -11,73 +11,73 @@
 	targetNamespace="http://ws.apache.org/axis2">
 
 <wsdl:types>
-        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://ws.apache.org/axis2">
-            <xs:element name="pow">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="a" type="xs:int"/>
-                        <xs:element minOccurs="0" name="b" type="xs:positiveInteger"/>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="powResponse">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="return" type="xs:int"/>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="mult">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="a" type="xs:int"/>
-                        <xs:element minOccurs="0" name="b" type="xs:int"/>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="multResponse">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="return" type="xs:int"/>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="division">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="a" type="xs:int"/>
-                        <xs:element minOccurs="0" name="b" type="xs:int"/>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="divisionResponse">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="return" type="xs:int"/>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="add">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="a" type="xs:int"/>
-                        <xs:element minOccurs="0" name="b" type="xs:int"/>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="addResponse">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="return" type="xs:int"/>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-        </xs:schema>
+        <xsd:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://ws.apache.org/axis2">
+            <xsd:element name="pow">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element minOccurs="0" name="a" type="xsd:int"/>
+                        <xsd:element minOccurs="0" name="b" type="xsd:positiveInteger"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="powResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element minOccurs="0" name="return" type="xsd:int"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="mult">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element minOccurs="0" name="a" type="xsd:int"/>
+                        <xsd:element minOccurs="0" name="b" type="xsd:int"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="multResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element minOccurs="0" name="return" type="xsd:int"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="division">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element minOccurs="0" name="a" type="xsd:int"/>
+                        <xsd:element minOccurs="0" name="b" type="xsd:int"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="divisionResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element minOccurs="0" name="return" type="xsd:int"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="add">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element minOccurs="0" name="a" type="xsd:int"/>
+                        <xsd:element minOccurs="0" name="b" type="xsd:int"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="addResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element minOccurs="0" name="return" type="xsd:int"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:schema>
     </wsdl:types>
 
 	<wsdl:interface name="MathUtils">
 
-	<wsdl:operation name="Add"
+	<wsdl:operation name="add"
             pattern="http://www.w3.org/ns/wsdl/in-out"
             style="http://www.w3.org/ns/wsdl/style/iri"
             wsdlx:safe="true">
@@ -87,7 +87,7 @@
             <wsdl:output element="msg:addResponse"/>
         </wsdl:operation>
 
-	<wsdl:operation name="Mult"
+	<wsdl:operation name="mult"
             pattern="http://www.w3.org/ns/wsdl/in-out"
             style="http://www.w3.org/ns/wsdl/style/iri"
             wsdlx:safe="true">
@@ -97,7 +97,7 @@
             <wsdl:output element="msg:multResponse"/>
         </wsdl:operation>
         
-        <wsdl:operation name="Pow"
+        <wsdl:operation name="pow"
             pattern="http://www.w3.org/ns/wsdl/in-out"
             style="http://www.w3.org/ns/wsdl/style/iri"
             wsdlx:safe="true">
@@ -107,7 +107,7 @@
             <wsdl:output element="msg:powResponse"/>
         </wsdl:operation>
 
-	<wsdl:operation name="Division"
+	<wsdl:operation name="division"
             pattern="http://www.w3.org/ns/wsdl/in-out"
             style="http://www.w3.org/ns/wsdl/style/iri"
             wsdlx:safe="true">
@@ -127,16 +127,16 @@
         interface="tns:MathUtils">
 
        
-        <wsdl:operation ref="tns:Add" whttp:method="GET"
+        <wsdl:operation ref="tns:add" whttp:method="GET"
                 whttp:location="add"/>
 
-	 <wsdl:operation ref="tns:Mult" whttp:method="GET"
+	 <wsdl:operation ref="tns:mult" whttp:method="GET"
                 whttp:location="mult"/>
 
-	 <wsdl:operation ref="tns:Pow" whttp:method="GET"
+	 <wsdl:operation ref="tns:pow" whttp:method="GET"
                 whttp:location="pow"/>
 
-	 <wsdl:operation ref="tns:Division" whttp:method="GET"
+	 <wsdl:operation ref="tns:division" whttp:method="GET"
                 whttp:location="division"/>
 
 
