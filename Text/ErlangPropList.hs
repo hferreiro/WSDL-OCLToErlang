@@ -129,6 +129,16 @@ instance ErlangPropList Expression where
                  , ("body", PL e2)
                  ]
 
+  proplist (EExplPropCall e1 _ (PCall op _ _ NoPCP))
+    = proplist $ [ ("expression", PL (Ident "PropertyCallExp"))
+                 , ("source", PL e1)
+                 , ("referredProperty", PL [ ("name", PL op)
+                                           --, ("type", PL [ ("name", PL)
+                                           --              , ("qualifiedName", PL)
+                                           --              ])
+                                           ])
+                 ]
+
   proplist (EExplPropCall e1 _ (PCall op _ _ ppcp))
     = proplist $ [ ("expression", PL (Ident "OperationCallExp"))
                  --, ("name", PL )
