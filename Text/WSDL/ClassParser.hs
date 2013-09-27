@@ -9,12 +9,12 @@ import Data.Class as C
 wsdl2Class :: String -> String -> [Class]
 wsdl2Class s x
   = do (n,i) <- getIfaceNames xml
-       let methods = getOperations i cls
+       let methods = getOperations i defs
        --    attrs = getAttributes i
        return (Class n [] methods)
-    ++ [c | (_,c) <- cls]
+    ++ xsdCls defs
   where
-    cls = parseTypes xsd
+    defs = parseDefs xsd
 
     xml = fromJust (parseXMLDoc s)
     xsd = fromJust (parseXMLDoc x)
@@ -31,8 +31,8 @@ getIfaceNames e
                      return (n,e))
        return (n,i)
 
-getOperations :: Element -> [Def] -> [Method]
-getOperations e cls
+getOperations :: Element -> XSDDefs -> [Method]
+getOperations e defs
   = do operation <- elementsByTag ("wsdl","operation") e
        return (fromJust $ getOperation operation)
 
@@ -48,7 +48,7 @@ getOperations e cls
     getReturn op
       = do outputT <- childByTag ("wsdl","output") op
            ('m':'s':'g':':':msgS) <- attrByTag "element" outputT -- "msg:"
-           return (TClass msgS)
+           xsdType msgS defs
 
     getParams :: Element -> [Param]
     getParams op
@@ -56,16 +56,26 @@ getOperations e cls
              cl = fromJust $ do
                     inputT <- childByTag ("wsdl","input") op
                     ('m':'s':'g':':':msgS) <- attrByTag "element" inputT -- "msg:"
-                    lookup msgS cls
+                    xsdDef msgS defs
            C.Attr tv <- cAttrs cl
            return (Param (TVar (tvName tv) (tvType tv)))
 
 
+type XSDDefs = ([Def], [TDef])
 type Def = (String, Class)
 type TDef = (String, Type)
 
-parseTypes :: Element -> [Def]
-parseTypes e = defs
+xsdType:: String -> XSDDefs -> Maybe Type
+xsdType t defs = lookup t (snd defs)
+
+xsdDef :: String -> XSDDefs -> Maybe Class
+xsdDef c defs = lookup c (fst defs)
+
+xsdCls :: XSDDefs -> [Class]
+xsdCls (defs,_) = map snd defs
+
+parseDefs :: Element -> XSDDefs
+parseDefs e = (defs, tds)
   where
     (defs, tds) = foldr addDef ([],[]) (catMaybes maybeDefs)
     maybeDefs = map (parseType tds) elems
@@ -81,10 +91,10 @@ parseTypes e = defs
            complexType <- elementByTag ("xsd","complexType") e
            let attrs = getAttrs complexType
            case attrs of
-             [C.Attr (TVar _ t@(TSeq _))] ->
+             [C.Attr (TVar _ t)] ->
                return (Nothing, (n,t))
              _ ->
-               return (Just (n, Class n attrs []), (n, TClass n))
+               return $ (Just (n, Class n attrs []), (n, TClass n))
       where
         getAttrs :: Element -> [C.Attr]
         getAttrs t
