@@ -1,5 +1,5 @@
 context VoDKATV
-def: state_rooms:Sequence(Tuple(roomId:String, description:String)) = Sequence{}
+def: state_rooms:Sequence(String) = Sequence{}
 
 context VoDKATV::CreateRoom(roomId:String, description:String):CreateRoomResponse
 post CreateRoom:
@@ -20,11 +20,12 @@ post CreateRoom:
     --         </errors>
     --     </room>
     if ((roomId = "") or (roomId = null)) then
-        (result.errors->size() = 1 and
-         result.errors->at(0).code = "required" and
-         result.errors->at(0).params->size() = 1 and
-         result.errors->at(0).params->at(0).name = "roomId" and
-         result.errors->at(0).params->at(0).value = "")
+        self.state_rooms = self.state_rooms@pre and
+        (result.errors->size() = 1) and
+        result.errors->at(0).code = "required" and
+        result.errors->at(0).params->size() = 1 and
+        result.errors->at(0).params->at(0).name = "roomId" and
+        result.errors->at(0).params->at(0).value = ""
 
     -- URL: /external/admin/configuration/CreateRoom.do
     -- POST data:
@@ -46,31 +47,16 @@ post CreateRoom:
     --         </errors>
     --     </room>
     else
-        if (self.state_rooms->select(room | room.roomId = roomId)->notEmpty()) then
+        if (self.state_rooms@pre->select(rId | rId = roomId)->notEmpty()) then
+            self.state_rooms = self.state_rooms@pre and
             result.errors->size() = 1 and
             result.errors->at(0).code = "duplicated" and
             result.errors->at(0).params->size() = 1 and
             result.errors->at(0).params->at(0).name = "roomId" and
             result.errors->at(0).params->at(0).value = roomId
          else
+            self.state_rooms = self.state_rooms@pre->including(roomId) and
             result.roomId = roomId and
             result.description = description
          endif
     endif
-
-post next_state:
-    if ((roomId = "") or (roomId = null)) then
-        self.state_rooms = self.state_rooms@pre
-
-    else
-	    if (self.state_rooms->select(room | room.roomId = roomId)->notEmpty()) then
-	        self.state_rooms = self.state_rooms@pre
-
-	    else
-	        self.state_rooms = self.state_rooms@pre->including(
-                    Tuple {
-                        roomId:String = roomId,
-                        description:String = description
-                    })
-	    endif
-	endif

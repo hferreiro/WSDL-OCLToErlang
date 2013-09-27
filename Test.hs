@@ -1,15 +1,15 @@
 module Main where
 
 import Control.Monad ( when )
-import Text.PrettyPrint ( render )
 import System.IO ( stdin, hGetContents )
 import System.Directory ( doesFileExist )
 import System.Environment ( getArgs, getProgName )
 import System.FilePath ( (<.>), dropExtension )
 
 import Data.Class ( addConstrs )
+import qualified Data.Map as M
 import Language.OCL
-import Text.ErlangPropList ( ErlangPropList(..) )
+import Text.ErlangPropList ( propList )
 import Text.WSDL.ClassParser ( wsdl2Class )
 
 type ParseFun a = [Token] -> Err a
@@ -28,7 +28,7 @@ run p wc oc xc
     in case p ts of
         Ok (OCLfile cs) -> do
           let cls' = addConstrs cls cs
-          putStrLn $ render (proplist cls') ++ "."
+          putStrLn $ (propList cls') ++ "."
         Bad s -> error ("Could not parse OCL file: " ++ s)
 
 getFiles :: FilePath -> IO (FilePath, FilePath, FilePath)
