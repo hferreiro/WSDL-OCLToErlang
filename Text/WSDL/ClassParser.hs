@@ -78,20 +78,20 @@ parseDefs :: Element -> XSDDefs
 parseDefs e = (defs, tds)
   where
     (defs, tds) = foldr addDef ([],[]) (catMaybes maybeDefs)
-    maybeDefs = map (parseType tds) elems
+    maybeDefs = map parseType elems
     elems = elChildren e
 
     addDef :: (Maybe Def, TDef) -> ([Def], [TDef]) -> ([Def], [TDef])
     addDef (Nothing, td) (ds, tds) = (ds, td:tds)
     addDef (Just df, td) (ds, tds) = (df:ds, td:tds)
 
-    parseType :: [TDef] -> Element -> Maybe (Maybe Def, TDef)
-    parseType tds e
+    parseType :: Element -> Maybe (Maybe Def, TDef)
+    parseType e
       = do n <- attrByTag "name" e
            complexType <- elementByTag ("xsd","complexType") e
            let attrs = getAttrs complexType
            case attrs of
-             [C.Attr (TVar _ t)] ->
+             [C.Attr (TVar _ t@(TSeq _))] ->
                return (Nothing, (n,t))
              _ ->
                return $ (Just (n, Class n attrs []), (n, TClass n))
