@@ -174,7 +174,7 @@ instance ErlangPropList Expression where
              M.insert ((\(Ident s) -> s) i) (getType it) env
 
   proplist env e@(EExplPropCall e1 PArrow (PCall (PathName [PName (Ident "select")]) _ _ (PCPs (PCPConcrete e2 [PCPBar e3]))))
-    = proplist env' $ [ ("expression", PL (Ident "IterateExpImpl"))
+    = proplist env' $ [ ("expression", PL (Ident "IteratorExpImpl"))
                       , ("name", PL (Ident "select"))
                       , ("iterator", PL [("variable", plVar it itType Nothing)])
                       , ("source", PL e1)
