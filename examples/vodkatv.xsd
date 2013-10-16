@@ -38,6 +38,99 @@
         </xsd:complexType>
     </xsd:element>
 
+    <xsd:element name="findRoomByIdParams">
+        <xsd:annotation>
+            <xsd:documentation>
+            Params for operation FindRoomById.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="roomId" type="xsd:string" />
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="findRoomByIdResponse">
+        <xsd:annotation>
+            <xsd:documentation>
+            Response of operation FindRoomById.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="roomId" type="xsd:string" />
+                <xsd:element name="description" type="xsd:string" minOccurs="0" maxOccurs="1" />
+                <xsd:element name="errors" type="tns:errors" minOccurs="0" maxOccurs="1" />
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="findAllRoomsParams">
+        <xsd:annotation>
+            <xsd:documentation>
+            Params for operation FindAllRooms.
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+
+    <xsd:element name="findAllRoomsResponse">
+        <xsd:annotation>
+            <xsd:documentation>
+            Response of operation FindAllRooms.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="rooms" type="tns:room" minOccurs="0" maxOccurs="unbounded" />
+                <xsd:element name="errors" type="tns:errors" minOccurs="0" maxOccurs="1" />
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="deleteRoomParams">
+        <xsd:annotation>
+            <xsd:documentation>
+            Params for operation DeleteRoom.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="roomId" type="xsd:string" />
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="deleteRoomResponse">
+        <xsd:annotation>
+            <xsd:documentation>
+            Response of operation DeleteRoom.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="room" type="tns:deletedRoom" minOccurs="0" maxOccurs="unbounded" />
+                <xsd:element name="errors" type="tns:errors" minOccurs="0" maxOccurs="1" />
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <!--
+    Rooms
+    -->
+    <xsd:complexType name="room">
+        <xsd:sequence>
+            <xsd:element name="roomId" type="xsd:string" />
+            <xsd:element name="description" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="deletedRoom">
+        <xsd:sequence>
+            <xsd:element name="roomId" type="xsd:string" />
+        </xsd:sequence>
+    </xsd:complexType>
+
     <!--
     Errors
     -->

@@ -39,6 +39,46 @@
             <wsdl:output element="msg:createRoomResponse"/>
         </wsdl:operation>
 
+        <wsdl:operation name="FindRoomById"
+            pattern="http://www.w3.org/ns/wsdl/in-out"
+            style="http://www.w3.org/ns/wsdl/style/iri"
+            wsdlx:safe="true">
+
+            <wsdl:documentation>
+            It finds a room by its identifier.
+            </wsdl:documentation>
+
+            <wsdl:input element="msg:findRoomByIdParams"/>
+            <wsdl:output element="msg:findRoomByIdResponse"/>
+        </wsdl:operation>
+
+        <wsdl:operation name="FindAllRooms"
+            pattern="http://www.w3.org/ns/wsdl/in-out"
+            style="http://www.w3.org/ns/wsdl/style/iri"
+            wsdlx:safe="true">
+
+            <wsdl:documentation>
+            It returns all the rooms created on the system.
+            </wsdl:documentation>
+
+            <wsdl:input element="msg:findAllRoomsParams"/>
+            <wsdl:output element="msg:findAllRoomsResponse"/>
+        </wsdl:operation>
+
+        <wsdl:operation name="DeleteRoom"
+            pattern="http://www.w3.org/ns/wsdl/in-out"
+            style="http://www.w3.org/ns/wsdl/style/iri"
+            wsdlx:safe="true">
+
+            <wsdl:documentation>
+            It deletes an existing household and all their associated devices
+            from the system.
+            </wsdl:documentation>
+
+            <wsdl:input element="msg:deleteRoomParams"/>
+            <wsdl:output element="msg:deleteRoomResponse"/>
+        </wsdl:operation>
+
     </wsdl:interface>
 
     <!--
