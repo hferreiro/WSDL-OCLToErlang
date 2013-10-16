@@ -40,6 +40,7 @@ newtype Param = Param TVar
 data TVar = TVar { tvName :: String
                  , tvType :: Type
                  }
+  deriving Eq
 
 instance Show TVar where
   show (TVar n t) = n ++ ":" ++ show t
@@ -51,6 +52,7 @@ data Type = TSimple [String]
           | TBag Type
           | TSeq Type
           | TColl Type
+  deriving Eq
 
 instance Show Type where
   show (TSimple ss) = intercalate "::" ss

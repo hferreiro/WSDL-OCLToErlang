@@ -1,6 +1,7 @@
 module Text.WSDL.ClassParser ( wsdl2Class ) where
 
 import Control.Monad ( msum )
+import Data.List ( partition )
 import Data.Maybe ( catMaybes, fromJust, maybeToList )
 import Text.XML.Light
 
@@ -34,7 +35,7 @@ getIfaceNames e
 getOperations :: Element -> XSDDefs -> [Method]
 getOperations e defs
   = do operation <- elementsByTag ("wsdl","operation") e
-       return (fromJust $ getOperation operation)
+       maybeToList (getOperation operation)
 
   where
     getOperation :: Element -> Maybe Method
@@ -53,11 +54,12 @@ getOperations e defs
     getParams :: Element -> [Param]
     getParams op
       = do let
-             cl = fromJust $ do
-                    inputT <- childByTag ("wsdl","input") op
-                    ('m':'s':'g':':':msgS) <- attrByTag "element" inputT -- "msg:"
-                    xsdDef msgS defs
-           C.Attr tv <- cAttrs cl
+             attrs = concat . maybeToList $ do
+                       inputT <- childByTag ("wsdl","input") op
+                       ('m':'s':'g':':':msgS) <- attrByTag "element" inputT -- "msg:"
+                       let cl = xsdDef msgS defs
+                       cAttrs `fmap` cl
+           C.Attr tv <- attrs
            return (Param (TVar (tvName tv) (tvType tv)))
 
 
@@ -75,7 +77,7 @@ xsdCls :: XSDDefs -> [Class]
 xsdCls (defs,_) = map snd defs
 
 parseDefs :: Element -> XSDDefs
-parseDefs e = (defs, tds)
+parseDefs e = replace (defs, tds)
   where
     (defs, tds) = foldr addDef ([],[]) (catMaybes maybeDefs)
     maybeDefs = map parseType elems
@@ -90,11 +92,7 @@ parseDefs e = (defs, tds)
       = do n <- attrByTag "name" e
            complexType <- elementByTag ("xsd","complexType") e
            let attrs = getAttrs complexType
-           case attrs of
-             [C.Attr (TVar _ t@(TSeq _))] ->
-               return (Nothing, (n,t))
-             _ ->
-               return $ (Just (n, Class n attrs []), (n, TClass n))
+           return $ (Just (n, Class n attrs []), (n, TClass n))
       where
         getAttrs :: Element -> [C.Attr]
         getAttrs t
@@ -116,6 +114,30 @@ parseDefs e = (defs, tds)
                       _ -> fail ""
                return $ C.Attr (TVar n t)
 
+    replace :: XSDDefs -> XSDDefs
+    replace (defs, tds)
+      = (defs', tds')
+      where
+        (sAttr, someDefs) = partition singleAttr defs
+        singleAttr (_, Class _ [C.Attr (TVar _ (TSeq _))] _) = True
+        singleAttr _                                         = False
+
+        (changed, tds') = foldr (clean newTds) ([],[]) tds
+        newTds = map toDef sAttr
+        toDef (n, Class _ [C.Attr (TVar _ t@(TSeq _))] _) = (n,t)
+        clean cls d@(n,t) (chd, tds)
+          = case lookup n cls of
+              Just t' -> ((t,t'):chd, (n,t'):tds)
+              Nothing -> (chd, d:tds)
+
+        defs' = map change someDefs
+          where
+            change (n, Class n' attrs m)
+              = (n, Class n' (map newType attrs) m)
+            newType a@(C.Attr (TVar n t))
+              = case lookup t changed of
+                  Just t' -> C.Attr (TVar n t')
+                  Nothing -> a
 
 --
 childByTag :: (String, String) -> Element -> Maybe Element

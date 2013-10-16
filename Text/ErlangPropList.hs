@@ -40,12 +40,12 @@ oclType (EExplPropCall e1 PArrow (PCall a _ _ _)) env
               if isCollectionType t
               then TSimple ["Integer"]
               else error (pathName a ++ " cannot be applied to an expression of type '" ++ show t ++ "'")
-        | pathName a `elem` ["notEmpty"] ->
+        | pathName a `elem` ["includesAll", "isEmpty", "notEmpty"] ->
             let t = oclType e1 env in
               if isCollectionType t
               then TSimple ["Boolean"]
               else error (pathName a ++ " cannot be applied to an expression of type '" ++ show t ++ "'")
-        | pathName a `elem` ["select", "including"] ->
+        | pathName a `elem` ["collect", "excluding", "including", "select"] ->
             let t = oclType e1 env in
               if isCollectionType t
               then t
@@ -173,9 +173,10 @@ instance ErlangPropList Expression where
       env' = M.insert (pathName v) (getSimpleType vt) $
              M.insert ((\(Ident s) -> s) i) (getType it) env
 
-  proplist env e@(EExplPropCall e1 PArrow (PCall (PathName [PName (Ident "select")]) _ _ (PCPs (PCPConcrete e2 [PCPBar e3]))))
+  proplist env e@(EExplPropCall e1 PArrow (PCall (PathName [PName (Ident op)]) _ _ (PCPs (PCPConcrete e2 [PCPBar e3]))))
+    | op `elem` ["collect", "select"]
     = proplist env' $ [ ("expression", PL (Ident "IteratorExpImpl"))
-                      , ("name", PL (Ident "select"))
+                      , ("name", PL (Ident op))
                       , ("iterator", PL [("variable", plVar it itType Nothing)])
                       , ("source", PL e1)
                       , ("body", PL e3)
