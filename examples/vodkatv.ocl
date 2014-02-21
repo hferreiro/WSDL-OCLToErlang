@@ -1,24 +1,8 @@
-context VoDKATV
+context VoDKATVInterface
 def: state_rooms:Sequence(String) = Sequence{}
 
-context VoDKATV::CreateRoom(roomId:String, description:String):CreateRoomResponse
+context VoDKATVInterface::CreateRoom(roomId:String, description:String):Rooms
 post CreateRoom:
-    -- URL: /external/admin/configuration/CreateRoom.do
-    -- POST data:
-    --   * Empty roomId, for example:
-    --     <room></room>
-    -- Response:
-    --     <room>
-    --         <errors>
-    --             <error>
-    --                 <code>required</code>
-    --                     <param value="" name="roomId"/>
-    --                 <params>
-    --                 </params>
-    --                 <description>Required code</description>
-    --             </error>
-    --         </errors>
-    --     </room>
     if ((roomId = "") or (roomId = null)) then
         self.state_rooms = self.state_rooms@pre and
         (result.errors->size() = 1) and
@@ -27,25 +11,6 @@ post CreateRoom:
         result.errors->at(0).params->at(0).name = "roomId" and
         result.errors->at(0).params->at(0).value = ""
 
-    -- URL: /external/admin/configuration/CreateRoom.do
-    -- POST data:
-    --   * A roomId already used, for example:
-    --     <room>
-    --         <roomId>ROOM_ID</roomId>
-    --         <description>DESCRIPTION</description>
-    --     </room>
-    -- Response:
-    --     <room>
-    --         <errors>
-    --             <error>
-    --                 <code>duplicated</code>
-    --                 <params>
-    --                     <param value="ROOM_ID" name="roomId"/>
-    --                 </params>
-    --                 <description>Duplicated</description>
-    --             </error>
-    --         </errors>
-    --     </room>
     else
         if (self.state_rooms@pre->select(rId | rId = roomId)->notEmpty()) then
             self.state_rooms = self.state_rooms@pre and
@@ -61,7 +26,7 @@ post CreateRoom:
          endif
     endif
 
-context VoDKATV::FindRoomById(roomId:String):FindRoomByIdResponse
+context VoDKATVInterface::FindRoomById(roomId:String):Room
 post FindRoomById:
     if ((roomId = "") or (roomId = null)) then
         self.state_rooms = self.state_rooms@pre and
@@ -84,14 +49,14 @@ post FindRoomById:
          endif
     endif
 
-context VoDKATV::FindAllRooms():FindAllRoomsResponse
+context VoDKATVInterface::FindAllRooms():Rooms
 post FindAllRooms:
     self.state_rooms = self.state_rooms@pre and
         result.rooms->size() = self.state_rooms->size() and
         self.state_rooms->includesAll(result.rooms -> collect(r | r.roomId)) and
         result.rooms -> collect(r | r.roomId) ->includesAll(self.state_rooms)
 
-context VoDKATV::DeleteRoom(roomId:String):DeleteRoomResponse
+context VoDKATVInterface::DeleteRoom(roomId:String):Rooms
 post DeleteRoom:
     if ((roomId = "") or (roomId = null)) then
         self.state_rooms = self.state_rooms@pre and
