@@ -52,9 +52,9 @@ post FindRoomById:
 context VoDKATVInterface::FindAllRooms():Rooms
 post FindAllRooms:
     self.state_rooms = self.state_rooms@pre and
-        result.rooms->size() = self.state_rooms->size() and
-        self.state_rooms->includesAll(result.rooms -> collect(r | r.roomId)) and
-        result.rooms -> collect(r | r.roomId) ->includesAll(self.state_rooms)
+        result.room->size() = self.state_rooms->size() and
+        self.state_rooms->includesAll(result.room -> collect(r | r.roomId)) and
+        result.room -> collect(r | r.roomId) ->includesAll(self.state_rooms)
 
 context VoDKATVInterface::DeleteRoom(roomId:String):Rooms
 post DeleteRoom:
