@@ -1,7 +1,7 @@
-context VoDKATVInterface
+context VoDKATV
 def: state_rooms:Sequence(String) = Sequence{}
 
-context VoDKATVInterface::CreateRoom(roomId:String, description:String):Rooms
+context VoDKATV::CreateRoom(roomId:String, description:String):Rooms
 post CreateRoom:
     if ((roomId = "") or (roomId = null)) then
         self.state_rooms = self.state_rooms@pre and
@@ -26,7 +26,7 @@ post CreateRoom:
          endif
     endif
 
-context VoDKATVInterface::FindRoomById(roomId:String):Room
+context VoDKATV::FindRoomById(roomId:String):Room
 post FindRoomById:
     if ((roomId = "") or (roomId = null)) then
         self.state_rooms = self.state_rooms@pre and
@@ -49,14 +49,14 @@ post FindRoomById:
          endif
     endif
 
-context VoDKATVInterface::FindAllRooms():Rooms
+context VoDKATV::FindAllRooms():Rooms
 post FindAllRooms:
     self.state_rooms = self.state_rooms@pre and
         result.room->size() = self.state_rooms->size() and
         self.state_rooms->includesAll(result.room -> collect(r | r.roomId)) and
         result.room -> collect(r | r.roomId) ->includesAll(self.state_rooms)
 
-context VoDKATVInterface::DeleteRoom(roomId:String):Rooms
+context VoDKATV::DeleteRoom(roomId:String):Rooms
 post DeleteRoom:
     if ((roomId = "") or (roomId = null)) then
         self.state_rooms = self.state_rooms@pre and

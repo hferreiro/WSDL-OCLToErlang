@@ -23,7 +23,7 @@
     <!--
     Interface
     -->
-    <wsdl:interface name="VoDKATVInterface">
+    <wsdl:interface name="VoDKATV">
 
         <!-- Room -->
         <wsdl:operation name="CreateRoom"
@@ -1184,7 +1184,7 @@
     -->
     <wsdl:binding name="VoDKATVHTTPBinding"
         type="http://www.w3.org/ns/wsdl/http"
-        interface="tns:VoDKATVInterface">
+        interface="tns:VoDKATV">
 
         <wsdl:documentation>
         HTTP binding for the VoDKATV OSS/BSS service.
@@ -1478,7 +1478,7 @@
     <!--
     Service
     -->
-    <wsdl:service name="VoDKATV" interface="tns:VoDKATVInterface">
+    <wsdl:service name="VoDKATV" interface="tns:VoDKATV">
 
         <wsdl:documentation>
         VoDKATV OSS/BSS service.
