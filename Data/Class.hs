@@ -72,20 +72,22 @@ addConstrs cls cs = map addC cls
 
     addC (Class n as ms)
       = let (acs, mcs) = Map.findWithDefault ([], Map.empty) n cc
-        in Class n (as ++ map toAttr acs) (map (addMC mcs) ms)
+        in Class n (as ++ concatMap toAttr acs) (map (addMC mcs) ms)
 
     addMC mcs (Method  n r p cs)
       = Method n r p (cs ++ Map.findWithDefault [] n mcs)
 
-    toAttr :: Constraint -> Attr
+    toAttr :: Constraint -> [Attr]
     toAttr c
-      = let def = getDef c
-            tv = getTV def
-        in Attr tv
+      = let defs = getDefs c
+            tvs = map getTV defs
+        in map Attr tvs
 
-    getDef :: Constraint -> DefExpression
-    getDef (Constr _ [CBDef def]) = def
-    getDef (Constr _ [CBDefNamed _ def]) = def
+    getDefs :: Constraint -> [DefExpression]
+    getDefs (Constr _ cbs) = map fromCB cbs
+      where
+        fromCB (CBDef def) = def
+        fromCB (CBDefNamed _ def) = def
 
     getTV :: DefExpression -> TVar
     getTV (DENoParam (Ident n) _)       = TVar n (TSimple [""])
