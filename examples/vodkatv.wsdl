@@ -131,6 +131,7 @@
             <wsdl:output element="msg:devices"/>
         </wsdl:operation>
 
+<!--
         <wsdl:operation name="FindDevicesByTagId"
             pattern="http://www.w3.org/ns/wsdl/in-out"
             style="http://www.w3.org/ns/wsdl/style/iri"
@@ -143,6 +144,7 @@
             <wsdl:input element="msg:findDevicesByTagIdParams"/>
             <wsdl:output element="msg:devices"/>
         </wsdl:operation>
+-->
 
         <wsdl:operation name="UpdateDevice"
             pattern="http://www.w3.org/ns/wsdl/in-out"
@@ -171,6 +173,7 @@
         </wsdl:operation>
 
         <!-- DeviceClasses -->
+<!--
         <wsdl:operation name="FindAllDeviceClasses"
             pattern="http://www.w3.org/ns/wsdl/in-out"
             style="http://www.w3.org/ns/wsdl/style/iri"
@@ -182,8 +185,9 @@
 
             <wsdl:output element="msg:findAllDeviceClassesResponse"/>
         </wsdl:operation>
-
+-->
         <!-- Session -->
+<!--
         <wsdl:operation name="CreateSession"
             pattern="http://www.w3.org/ns/wsdl/in-out"
             style="http://www.w3.org/ns/wsdl/style/iri"
@@ -249,8 +253,9 @@
             <wsdl:input element="msg:deleteSessionParams"/>
             <wsdl:output element="msg:deleteSessionResponse"/>
         </wsdl:operation>
-
+-->
         <!-- Account -->
+<!--
         <wsdl:operation name="CreateAccount"
             pattern="http://www.w3.org/ns/wsdl/in-out"
             style="http://www.w3.org/ns/wsdl/style/iri"
@@ -305,8 +310,9 @@
             <wsdl:input element="msg:deleteAccountParams"/>
             <wsdl:output element="msg:deleteAccountResponse"/>
         </wsdl:operation>
-
+-->
         <!-- AccountDetails -->
+<!--
         <wsdl:operation name="CreateAccountDetails"
             pattern="http://www.w3.org/ns/wsdl/in-out"
             style="http://www.w3.org/ns/wsdl/style/iri"
@@ -358,8 +364,9 @@
             <wsdl:input element="msg:updateAccountDetailsParams"/>
             <wsdl:output element="msg:updateAccountDetailsResponse"/>
         </wsdl:operation>
-
+-->
         <!-- RoomDeviceSession -->
+<!--
         <wsdl:operation name="CreateRoomDeviceSession"
             pattern="http://www.w3.org/ns/wsdl/in-out"
             style="http://www.w3.org/ns/wsdl/style/iri"
@@ -443,8 +450,9 @@
             <wsdl:input element="msg:deleteRoomDeviceSessionParams"/>
             <wsdl:output element="msg:deleteRoomDeviceSessionResponse"/>
         </wsdl:operation>
-
+-->
         <!-- VideoServer -->
+<!--
         <wsdl:operation name="CreateVideoServer"
             pattern="http://www.w3.org/ns/wsdl/in-out"
             style="http://www.w3.org/ns/wsdl/style/iri"
@@ -534,8 +542,9 @@
             <wsdl:input element="msg:findVideoServerById"/>
             <wsdl:output element="msg:videoServer"/>
         </wsdl:operation>
-
+-->
         <!-- VideoServerAction -->
+<!--
         <wsdl:operation name="CreateVideoServerAction"
             pattern="http://www.w3.org/ns/wsdl/in-out"
             style="http://www.w3.org/ns/wsdl/style/iri"
@@ -553,8 +562,9 @@
             <wsdl:input element="msg:findVideoServerActionsByVideoServerNameParams"/>
             <wsdl:output element="msg:videoServerActions"/>
         </wsdl:operation>
-
+-->
         <!-- VideoServerStatus -->
+<!--
         <wsdl:operation name="FindVideoServerStatusById"
             pattern="http://www.w3.org/ns/wsdl/in-out"
             style="http://www.w3.org/ns/wsdl/style/iri"
@@ -579,8 +589,9 @@
 
             <wsdl:output element="msg:videoServersStatus"/>
         </wsdl:operation>
-
+-->
         <!-- VideoServerGroup -->
+<!--
         <wsdl:operation name="CreateVideoServerGroup"
             pattern="http://www.w3.org/ns/wsdl/in-out"
             style="http://www.w3.org/ns/wsdl/style/iri"
@@ -657,9 +668,10 @@
             <wsdl:input element="msg:deleteVideoServerGroup"/>
             <wsdl:output element="msg:videoServerGroups"/>
         </wsdl:operation>
-
+-->
 
         <!-- ScreenSaver -->
+<!--
         <wsdl:operation name="CreateScreenSaver"
             pattern="http://www.w3.org/ns/wsdl/in-out"
             style="http://www.w3.org/ns/wsdl/style/iri"
@@ -724,9 +736,9 @@
             <wsdl:input element="msg:deleteScreenSaverParams"/>
             <wsdl:output element="msg:screenSavers"/>
         </wsdl:operation>
-
+-->
         <!-- Networks configuration -->
-
+<!--
         <wsdl:operation name="FindNetworkingConfiguration"
             pattern="http://www.w3.org/ns/wsdl/in-out"
             style="http://www.w3.org/ns/wsdl/style/iri"
@@ -753,8 +765,9 @@
             <wsdl:input element="msg:updateNetworkingConfigurationParams"/>
             <wsdl:output element="msg:networkingConfiguration"/>
         </wsdl:operation>
-
+-->
         <!-- AuxCacheServer -->
+<!--
         <wsdl:operation name="FindAuxCacheServer"
             pattern="http://www.w3.org/ns/wsdl/in-out"
             style="http://www.w3.org/ns/wsdl/style/iri"
@@ -779,8 +792,9 @@
             <wsdl:input element="msg:updateAuxCacheServersParams"/>
             <wsdl:output element="msg:auxCacheServers"/>
         </wsdl:operation>
-
+-->
         <!-- List Configuration -->
+<!--
         <wsdl:operation name="CreateListConfiguration"
             pattern="http://www.w3.org/ns/wsdl/in-out"
             style="http://www.w3.org/ns/wsdl/style/iri"
@@ -897,8 +911,9 @@
             <wsdl:input element="msg:deleteFilterListConfigurationParams"/>
             <wsdl:output element="msg:filterListConfigurations"/>
         </wsdl:operation>
-
+-->
         <!-- Channels -->
+<!--
         <wsdl:operation name="CreateVodkatvChannel"
             pattern="http://www.w3.org/ns/wsdl/in-out"
             style="http://www.w3.org/ns/wsdl/style/iri"
@@ -1001,8 +1016,9 @@
 
             <wsdl:output element="msg:casChannels"/>
         </wsdl:operation>
-
+-->
         <!-- RoleUsers -->
+<!--
         <wsdl:operation name="CreateRoleUsers"
             pattern="http://www.w3.org/ns/wsdl/in-out"
             style="http://www.w3.org/ns/wsdl/style/iri"
@@ -1066,8 +1082,9 @@
             <wsdl:input element="msg:deleteRoleUsers"/>
             <wsdl:output element="msg:rolesUsers"/>
         </wsdl:operation>
-
+-->
         <!-- RoleMenuOptions -->
+<!--
         <wsdl:operation name="CreateRoleMenuOptions"
             pattern="http://www.w3.org/ns/wsdl/in-out"
             style="http://www.w3.org/ns/wsdl/style/iri"
@@ -1131,9 +1148,9 @@
             <wsdl:input element="msg:deleteRoleMenuOptions"/>
             <wsdl:output element="msg:rolesMenuOptions"/>
         </wsdl:operation>
-
+-->
         <!-- User -->
-
+<!--
         <wsdl:operation name="FindAllUsers"
             pattern="http://www.w3.org/ns/wsdl/in-out"
             style="http://www.w3.org/ns/wsdl/style/iri"
@@ -1145,9 +1162,9 @@
 
             <wsdl:output element="msg:users"/>
         </wsdl:operation>
-
+-->
         <!-- Menu options -->
-
+<!--
         <wsdl:operation name="FindAllMenuOptions"
             pattern="http://www.w3.org/ns/wsdl/in-out"
             style="http://www.w3.org/ns/wsdl/style/iri"
@@ -1159,8 +1176,9 @@
 
             <wsdl:output element="msg:menuOptions"/>
         </wsdl:operation>
-
+-->
         <!-- Dummy -->
+<!--
         <wsdl:operation name="Dummy"
             pattern="http://www.w3.org/ns/wsdl/in-out"
             style="http://www.w3.org/ns/wsdl/style/iri"
@@ -1176,7 +1194,7 @@
             <wsdl:input element="msg:dummyParams"/>
             <wsdl:output element="msg:dummyResponse"/>
         </wsdl:operation>
-
+-->
     </wsdl:interface>
 
     <!--
@@ -1216,8 +1234,10 @@
         <wsdl:operation ref="tns:FindDevicesByRoom" whttp:method="GET"
                 whttp:location="external/admin/configuration/FindDevicesByRoom.do"/>
 
+<!--
         <wsdl:operation ref="tns:FindDevicesByTagId" whttp:method="GET"
                 whttp:location="external/admin/configuration/FindDevicesByTagId.do"/>
+-->
 
         <wsdl:operation ref="tns:UpdateDevice" whttp:method="POST"
                 whttp:location="external/admin/configuration/UpdateDevice.do"/>
@@ -1226,10 +1246,12 @@
                 whttp:location="external/admin/configuration/DeleteDevice.do"/>
 
         <!-- DeviceClasses -->
+<!--
         <wsdl:operation ref="tns:FindAllDeviceClasses" whttp:method="GET"
                 whttp:location="external/admin/configuration/FindAllDeviceClasses.do"/>
-
+-->
         <!-- Session -->
+<!--
         <wsdl:operation ref="tns:CreateSession" whttp:method="POST"
                 whttp:location="external/admin/accounting/CreateSession.do"/>
 
@@ -1244,8 +1266,9 @@
 
         <wsdl:operation ref="tns:DeleteSession" whttp:method="GET"
                 whttp:location="external/admin/accounting/DeleteSession.do"/>
-
+-->
         <!-- Account -->
+<!--
         <wsdl:operation ref="tns:CreateAccount" whttp:method="POST"
                 whttp:location="external/admin/accounting/CreateAccount.do"/>
 
@@ -1257,8 +1280,10 @@
 
         <wsdl:operation ref="tns:DeleteAccount" whttp:method="GET"
                 whttp:location="external/admin/accounting/DeleteAccount.do"/>
+-->
 
         <!-- AccountDetails -->
+<!--
         <wsdl:operation ref="tns:CreateAccountDetails" whttp:method="POST"
                 whttp:location="external/admin/accounting/CreateAccountDetails.do"/>
 
@@ -1270,8 +1295,9 @@
 
         <wsdl:operation ref="tns:UpdateAccountDetails" whttp:method="POST"
                 whttp:location="external/admin/accounting/UpdateAccountDetails.do"/>
-
+-->
         <!-- RoomDeviceSession -->
+<!--
         <wsdl:operation ref="tns:CreateRoomDeviceSession" whttp:method="POST"
                 whttp:location="external/admin/configuration/CreateRoomDeviceSession.do"/>
 
@@ -1289,8 +1315,9 @@
 
         <wsdl:operation ref="tns:DeleteRoomDeviceSession" whttp:method="GET"
                 whttp:location="external/admin/configuration/DeleteRoomDeviceSession.do"/>
-
+-->
         <!-- VideoServer -->
+<!--
         <wsdl:operation ref="tns:CreateVideoServer" whttp:method="POST"
                 whttp:location="external/admin/configuration/CreateVideoServer.do"/>
 
@@ -1311,22 +1338,25 @@
 
         <wsdl:operation ref="tns:DisableVideoServer" whttp:method="GET"
               whttp:location="external/admin/configuration/DisableVideoServer.do"/>
-
+-->
         <!-- VideoServerAction -->
+<!--
         <wsdl:operation ref="tns:CreateVideoServerAction" whttp:method="POST"
                 whttp:location="external/admin/configuration/CreateVideoServerAction.do"/>
 
         <wsdl:operation ref="tns:FindVideoServerActionsByVideoServerName" whttp:method="GET"
                 whttp:location="external/admin/configuration/FindVideoServerActionsByVideoServerName.do"/>
-
+-->
         <!-- VideoServerStatus -->
+<!--
         <wsdl:operation ref="tns:FindVideoServerStatusById" whttp:method="GET"
                 whttp:location="external/admin/configuration/FindVideoServerStatusById.do"/>
 
         <wsdl:operation ref="tns:FindAllVideoServersStatus" whttp:method="GET"
                 whttp:location="external/admin/configuration/FindAllVideoServersStatus.do"/>
-
+-->
         <!-- VideoServerGroup -->
+<!--
         <wsdl:operation ref="tns:CreateVideoServerGroup" whttp:method="POST"
                 whttp:location="external/admin/configuration/CreateVideoServerGroup.do"/>
 
@@ -1344,8 +1374,9 @@
 
         <wsdl:operation ref="tns:FindVideoServerGroupByType" whttp:method="GET"
                 whttp:location="external/admin/configuration/FindVideoServerGroupByType.do"/>
-
+-->
         <!-- ScreenSaver -->
+<!--
         <wsdl:operation ref="tns:CreateScreenSaver" whttp:method="POST"
                 whttp:location="external/admin/configuration/CreateScreenSaver.do"/>
 
@@ -1360,8 +1391,9 @@
 
         <wsdl:operation ref="tns:DeleteScreenSaver" whttp:method="GET"
                 whttp:location="external/admin/configuration/DeleteScreenSaver.do"/>
-
+-->
         <!-- AuxCacheServer -->
+<!--
         <wsdl:operation ref="tns:FindAuxCacheServer" whttp:method="GET"
                 whttp:location="external/admin/configuration/FindAuxCacheServer.do"/>
 
@@ -1373,8 +1405,9 @@
 
         <wsdl:operation ref="tns:UpdateNetworkingConfiguration" whttp:method="POST"
                 whttp:location="external/admin/configuration/UpdateNetworkingConfiguration.do"/>
-
+-->
         <!-- List Configuration -->
+<!--
         <wsdl:operation ref="tns:CreateListConfiguration" whttp:method="POST"
                 whttp:location="external/admin/moviesmanagement/CreateListConfiguration.do"/>
 
@@ -1392,8 +1425,9 @@
 
         <wsdl:operation ref="tns:FindAssetsByListConfiguration" whttp:method="POST"
               whttp:location="external/admin/moviesmanagement/FindAssetsByListConfiguration.do"/>
-
+-->
         <!-- Filter List Configuration -->
+<!--
         <wsdl:operation ref="tns:CreateFilterListConfiguration" whttp:method="POST"
                 whttp:location="external/admin/moviesmanagement/CreateFilterListConfiguration.do"/>
 
@@ -1402,9 +1436,9 @@
 
         <wsdl:operation ref="tns:DeleteFilterListConfiguration" whttp:method="GET"
                 whttp:location="external/admin/moviesmanagement/DeleteFilterListConfiguration.do"/>
-
+-->
         <!-- Channels -->
-
+<!--
         <wsdl:operation ref="tns:FindVodkatvChannel" whttp:method="GET"
                 whttp:location="external/admin/moviesmanagement/FindVodkatvChannel.do"/>
 
@@ -1428,8 +1462,9 @@
 
         <wsdl:operation ref="tns:FindCasChannels" whttp:method="GET"
                 whttp:location="external/admin/moviesmanagement/FindCasChannels.do"/>
-
+-->
         <!-- RoleUsers -->
+<!--
         <wsdl:operation ref="tns:CreateRoleUsers" whttp:method="POST"
                 whttp:location="external/admin/configuration/CreateRoleUsers.do"/>
 
@@ -1444,8 +1479,9 @@
 
         <wsdl:operation ref="tns:DeleteRoleUsers" whttp:method="GET"
                 whttp:location="external/admin/configuration/DeleteRoleUsers.do"/>
-
+-->
         <!-- RoleMenuOptions -->
+<!--
         <wsdl:operation ref="tns:CreateRoleMenuOptions" whttp:method="POST"
                 whttp:location="external/admin/configuration/CreateRoleMenuOptions.do"/>
 
@@ -1460,19 +1496,22 @@
 
         <wsdl:operation ref="tns:DeleteRoleMenuOptions" whttp:method="GET"
                 whttp:location="external/admin/configuration/DeleteRoleMenuOptions.do"/>
-
+-->
         <!-- User -->
+<!--
         <wsdl:operation ref="tns:FindAllUsers" whttp:method="GET"
                 whttp:location="external/admin/configuration/FindAllUsers.do"/>
-
+-->
         <!-- Menu options -->
+<!--
         <wsdl:operation ref="tns:FindAllMenuOptions" whttp:method="GET"
                 whttp:location="external/admin/configuration/FindAllMenuOptions.do"/>
-
+-->
         <!-- Dummy -->
+<!--
         <wsdl:operation ref="tns:Dummy" whttp:method="GET"
                 whttp:location="Dummy.do"/>
-
+-->
     </wsdl:binding>
 
     <!--

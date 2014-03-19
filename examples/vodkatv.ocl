@@ -1,10 +1,13 @@
 context VoDKATV
-def: state_rooms:Sequence(String) = Sequence{}
+
+def: state_rooms:Set(String) = Set{}
+def: state_devices:Set(device) = Set{}
 
 context VoDKATV::CreateRoom(roomId:String, description:String):Rooms
 post CreateRoom:
     if ((roomId = "") or (roomId = null)) then
         self.state_rooms = self.state_rooms@pre and
+        self.state_devices = self.state_devices@pre and
         (result.errors->size() = 1) and
         result.errors->at(0).code = "required" and
         result.errors->at(0).params->size() = 1 and
@@ -14,6 +17,7 @@ post CreateRoom:
     else
         if (self.state_rooms@pre->select(rId | rId = roomId)->notEmpty()) then
             self.state_rooms = self.state_rooms@pre and
+            self.state_devices = self.state_devices@pre and
             result.errors->size() = 1 and
             result.errors->at(0).code = "duplicated" and
             result.errors->at(0).params->size() = 1 and
@@ -21,8 +25,10 @@ post CreateRoom:
             result.errors->at(0).params->at(0).value = roomId
          else
             self.state_rooms = self.state_rooms@pre->including(roomId) and
+            self.state_devices = self.state_devices@pre and
             result.roomId = roomId and
-            result.description = description
+            ((description = "" and result.description = null) or
+            (description <> "" and result.description = description))
          endif
     endif
 
@@ -30,6 +36,7 @@ context VoDKATV::FindRoomById(roomId:String):Room
 post FindRoomById:
     if ((roomId = "") or (roomId = null)) then
         self.state_rooms = self.state_rooms@pre and
+        self.state_devices = self.state_devices@pre and
         (result.errors->size() = 1) and
         result.errors->at(0).code = "required" and
         result.errors->at(0).params->size() = 1 and
@@ -38,6 +45,7 @@ post FindRoomById:
     else
         if (self.state_rooms@pre->select(rId | rId = roomId)->isEmpty()) then
             self.state_rooms = self.state_rooms@pre and
+            self.state_devices = self.state_devices@pre and
             result.errors->size() = 1 and
             result.errors->at(0).code = "not_found" and
             result.errors->at(0).params->size() = 1 and
@@ -45,6 +53,7 @@ post FindRoomById:
             result.errors->at(0).params->at(0).value = roomId
          else
             self.state_rooms = self.state_rooms@pre and
+            self.state_devices = self.state_devices@pre and
             result.roomId = roomId
          endif
     endif
@@ -52,6 +61,7 @@ post FindRoomById:
 context VoDKATV::FindAllRooms():Rooms
 post FindAllRooms:
     self.state_rooms = self.state_rooms@pre and
+        self.state_devices = self.state_devices@pre and
         result.room->size() = self.state_rooms->size() and
         self.state_rooms->includesAll(result.room -> collect(r | r.roomId)) and
         result.room -> collect(r | r.roomId) ->includesAll(self.state_rooms)
@@ -60,6 +70,7 @@ context VoDKATV::DeleteRoom(roomId:String):Rooms
 post DeleteRoom:
     if ((roomId = "") or (roomId = null)) then
         self.state_rooms = self.state_rooms@pre and
+        self.state_devices = self.state_devices@pre and
         (result.errors->size() = 1) and
         result.errors->at(0).code = "required" and
         result.errors->at(0).params->size() = 1 and
@@ -68,6 +79,7 @@ post DeleteRoom:
     else
         if (self.state_rooms@pre->select(rId | rId = roomId)->isEmpty()) then
             self.state_rooms = self.state_rooms@pre and
+            self.state_devices = self.state_devices@pre and
             result.errors->size() = 1 and
             result.errors->at(0).code = "not_found" and
             result.errors->at(0).params->size() = 1 and
@@ -75,6 +87,183 @@ post DeleteRoom:
             result.errors->at(0).params->at(0).value = roomId
          else
             self.state_rooms = self.state_rooms@pre->excluding(roomId) and
+            self.state_devices = self.state_devices@pre->select(d | d.roomId <> roomId) and
             result.room->at(0).roomId = roomId
+         endif
+    endif
+
+context VoDKATV::CreateDevice(physicalId:String,
+       deviceClass:String, roomId:String, description:String, tag:TagNode): Device
+post CreateDevice:
+    if ((physicalId = "") or (physicalId = null)) then
+        self.state_rooms = self.state_rooms@pre and
+        self.state_devices = self.state_devices@pre and
+        (result.errors->size() = 1) and
+        result.errors->at(0).code = "required" and
+        result.errors->at(0).params->size() = 1 and
+        result.errors->at(0).params->at(0).name = "physicalId" and
+        result.errors->at(0).params->at(0).value = ""
+    else
+        if ((roomId = "") or (roomId = null)) then
+            self.state_rooms = self.state_rooms@pre and
+            self.state_devices = self.state_devices@pre and
+            (result.errors->size() = 1) and
+            result.errors->at(0).code = "required" and
+            result.errors->at(0).params->size() = 1 and
+            result.errors->at(0).params->at(0).name = "roomId" and
+            result.errors->at(0).params->at(0).value = ""
+        else
+            if (self.state_rooms@pre->select(rId | rId = roomId)->isEmpty()) then
+                self.state_rooms = self.state_rooms@pre and
+                self.state_devices = self.state_devices@pre and
+                result.errors->size() = 1 and
+                result.errors->at(0).code = "not_found" and
+                result.errors->at(0).params->size() = 1 and
+                result.errors->at(0).params->at(0).name = "roomId" and
+                result.errors->at(0).params->at(0).value = roomId
+             else
+                self.state_rooms = self.state_rooms@pre and
+                self.state_devices = self.state_devices@pre->including(result) and
+                result.physicalId = physicalId and
+                result.deviceClass = deviceClass and
+                result.description = description
+             endif
+        endif
+    endif
+
+context VoDKATV::FindDevices(startIndex:Integer, count:Integer,
+        sortBy: String, order: String, query: String): Devices
+post FindDevices:
+    self.state_rooms = self.state_rooms@pre and
+        self.state_devices = self.state_devices@pre and
+        self.state_devices->includesAll(result.device)
+
+context VoDKATV::FindDevicesByRoom(roomId: String): Devices
+post FindDevicesByRoom:
+    if ((roomId = "") or (roomId = null)) then
+        self.state_rooms = self.state_rooms@pre and
+        self.state_devices = self.state_devices@pre and
+        (result.errors->size() = 1) and
+        result.errors->at(0).code = "required" and
+        result.errors->at(0).params->size() = 1 and
+        result.errors->at(0).params->at(0).name = "roomId" and
+        result.errors->at(0).params->at(0).value = ""
+    else
+        self.state_rooms = self.state_rooms@pre and
+            self.state_devices = self.state_devices@pre and
+            self.state_devices->collect(d | d.roomId = roomId)->
+                includesAll(result.device)
+    endif
+
+context VoDKATV::FindDeviceById(deviceId:Integer): Device
+post FindDeviceById:
+    if ((deviceId = "") or (deviceId = null)) then
+        self.state_rooms = self.state_rooms@pre and
+        self.state_devices = self.state_devices@pre and
+        (result.errors->size() = 1) and
+        result.errors->at(0).code = "required" and
+        result.errors->at(0).params->size() = 1 and
+        result.errors->at(0).params->at(0).name = "deviceId" and
+        result.errors->at(0).params->at(0).value = ""
+    else
+        if (self.state_devices@pre->select(d | d.id = deviceId)->isEmpty()) then
+            self.state_rooms = self.state_rooms@pre and
+            self.state_devices = self.state_devices@pre and
+            result.errors->size() = 1 and
+            result.errors->at(0).code = "not_found" and
+            result.errors->at(0).params->size() = 1 and
+            result.errors->at(0).params->at(0).name = "deviceId" and
+            result.errors->at(0).params->at(0).value = deviceId
+         else
+            self.state_rooms = self.state_rooms@pre and
+            self.state_devices = self.state_devices@pre and
+            result.id = deviceId
+         endif
+    endif
+
+context VoDKATV::UpdateDevice(id:Integer, physicalId:String,
+        deviceClass:String, roomId:String, description:String, tag:TagNode): Device
+post UpdateDevice:
+    if ((physicalId = "") or (physicalId = null)) then
+        self.state_rooms = self.state_rooms@pre and
+        self.state_devices = self.state_devices@pre and
+        (result.errors->size() = 1) and
+        result.errors->at(0).code = "required" and
+        result.errors->at(0).params->size() = 1 and
+        result.errors->at(0).params->at(0).name = "physicalId" and
+        result.errors->at(0).params->at(0).value = ""
+    else
+        if ((roomId = "") or (roomId = null)) then
+            self.state_rooms = self.state_rooms@pre and
+            self.state_devices = self.state_devices@pre and
+            (result.errors->size() = 1) and
+            result.errors->at(0).code = "required" and
+            result.errors->at(0).params->size() = 1 and
+            result.errors->at(0).params->at(0).name = "roomId" and
+            result.errors->at(0).params->at(0).value = ""
+        else
+            if ((id = "") or (id = null)) then
+                self.state_rooms = self.state_rooms@pre and
+                self.state_devices = self.state_devices@pre and
+                (result.errors->size() = 1) and
+                result.errors->at(0).code = "required" and
+                result.errors->at(0).params->size() = 1 and
+                result.errors->at(0).params->at(0).name = "deviceId" and
+                result.errors->at(0).params->at(0).value = ""
+            else
+                if (self.state_rooms@pre->select(rId | rId = roomId)->isEmpty()) then
+                    self.state_rooms = self.state_rooms@pre and
+                    self.state_devices = self.state_devices@pre and
+                    result.errors->size() = 1 and
+                    result.errors->at(0).code = "not_found" and
+                    result.errors->at(0).params->size() = 1 and
+                    result.errors->at(0).params->at(0).name = "roomId" and
+                    result.errors->at(0).params->at(0).value = roomId
+                 else
+                    if (self.state_devices@pre->select(d | d.physicalId = roomId)->notEmpty() and
+                        self.state_devices@pre->select(d | d.physicalId = roomId)->at(0).id <> id) then
+                        self.state_rooms = self.state_rooms@pre and
+                        self.state_devices = self.state_devices@pre and
+                        result.errors->size() = 1 and
+                        result.errors->at(0).code = "duplicated" and
+                        result.errors->at(0).params->size() = 1 and
+                        result.errors->at(0).params->at(0).name = "physicalId" and
+                        result.errors->at(0).params->at(0).value = roomId
+                     else
+                        self.state_rooms = self.state_rooms@pre and
+                        self.state_devices = self.state_devices@pre->select(d | d.id <> id)->including(result) and
+                        result.id = id and
+                        result.physicalId = physicalId and
+                        result.deviceClass = deviceClass and
+                        result.description = description
+                     endif
+                endif
+            endif
+        endif
+    endif
+
+context VoDKATV::DeleteDevice(deviceId:Integer): Devices
+post DeleteDevice:
+    if ((deviceId = "") or (deviceId = null)) then
+        self.state_rooms = self.state_rooms@pre and
+        self.state_devices = self.state_devices@pre and
+        (result.errors->size() = 1) and
+        result.errors->at(0).code = "required" and
+        result.errors->at(0).params->size() = 1 and
+        result.errors->at(0).params->at(0).name = "deviceId" and
+        result.errors->at(0).params->at(0).value = ""
+    else
+        if (self.state_devices@pre->select(dId | dId = deviceId)->isEmpty()) then
+            self.state_rooms = self.state_rooms@pre and
+            self.state_devices = self.state_devices@pre and
+            result.errors->size() = 1 and
+            result.errors->at(0).code = "not_found" and
+            result.errors->at(0).params->size() = 1 and
+            result.errors->at(0).params->at(0).name = "deviceId" and
+            result.errors->at(0).params->at(0).value = deviceId
+         else
+            self.state_rooms = self.state_rooms@pre and
+            self.state_devices = self.state_devices@pre->select(d | d.id <> deviceId) and
+            result.device->at(0).id = deviceId
          endif
     endif

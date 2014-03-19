@@ -88,9 +88,9 @@
         <xsd:complexType>
             <xsd:sequence>
                 <!-- startIndex: must be greater than 0 -->
-                <xsd:element name="startIndex" type="xsd:integer" />
+                <xsd:element name="startIndex" type="xsd:positiveInteger" />
                 <!-- count: must be greater than 0 -->
-                <xsd:element name="count" type="xsd:integer" />
+                <xsd:element name="count" type="xsd:nonNegativeInteger" />
                 <xsd:element name="sortBy" type="xsd:string" minOccurs="0" maxOccurs="1" />
                 <!-- order: "ascending" or "descending" -->
                 <xsd:element name="order" type="xsd:string" minOccurs="0" maxOccurs="1" />
