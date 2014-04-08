@@ -243,6 +243,11 @@ instance ErlangPropList Expression where
                      , ("value", PL "null")
                      ]
 
+  proplist env c@(ELitColl _)
+    -- = proplist env $ [
+    --                  ]
+       = error ("Cannot parse literal collection definition: " ++ show c)
+
   --proplist env (ELet ps e)
   --  = proplist env $ [
 
