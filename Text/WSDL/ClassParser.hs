@@ -114,17 +114,21 @@ parseDefs e = replace (defs, tds)
                       _ -> fail ""
                return $ C.Attr (TVar n t)
 
+    -- Find type definitions which are just type synomyms (single-attribute
+    -- classes with either a sequence type of an attribute named 'return'),
+    -- remove them and propagate the changes
     replace :: XSDDefs -> XSDDefs
     replace (defs, tds)
       = (defs', tds')
       where
         (sAttr, someDefs) = partition singleAttr defs
         singleAttr (_, Class _ [C.Attr (TVar _ (TSeq _))] _) = True
+        singleAttr (_, Class _ [C.Attr (TVar "return" _)] _) = True
         singleAttr _                                         = False
 
         (changed, tds') = foldr (clean newTds) ([],[]) tds
         newTds = map toDef sAttr
-        toDef (n, Class _ [C.Attr (TVar _ t@(TSeq _))] _) = (n,t)
+        toDef (n, Class _ [C.Attr (TVar _ t)] _) = (n,t)
         clean cls d@(n,t) (chd, tds)
           = case lookup n cls of
               Just t' -> ((t,t'):chd, (n,t'):tds)
