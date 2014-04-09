@@ -105,7 +105,7 @@
                                          {name, "result"},
                                          {type, [{name, "int"}]}]}]},
                                  {content,
-                                    [{expression, "IteratorExpImpl"},
+                                    [{expression, "IterateExpImpl"},
                                      {name, "iterate"},
                                      {iterator,
                                         [{variable,

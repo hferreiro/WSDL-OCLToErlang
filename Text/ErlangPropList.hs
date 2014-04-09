@@ -161,7 +161,7 @@ instance ErlangPropList Expression where
                      ]
 
   proplist env (EExplPropCall (ELitColl c) PArrow (PCall op _ _ (PCPs (PCPConcrete (EImplPropCall (PCall v _ _ _)) [PCPColon vt, PCPIterate i it e, PCPBar e2]))))
-    = proplist env' $ [ ("expression", PL (Ident "IteratorExpImpl"))
+    = proplist env' $ [ ("expression", PL (Ident "IterateExpImpl"))
                       , ("name", PL op)
                       , ("iterator", PL [ ("variable", plVar (pathName v) (getSimpleType vt) Nothing)
                                         ])
